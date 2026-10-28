@@ -15,7 +15,7 @@ class Cart extends Model
         session(["cart.{$product->id}.qty" => session("cart.{$product->id}.qty") + $qty]);
         }else {
             session(["cart.{$product->id}" => [
-                'id' => $product->id,
+                'product_id' => $product->id,
                 'title' => $product->title,
                 'slug' => $product->slug,
                 'price' => $product->price,
@@ -37,19 +37,22 @@ class Cart extends Model
         }
     }
 
-        public function delItem($product_id)
+    public function delItem($product_id)
     {
         if (!session()->has("cart.{$product_id}")) {
             return false;
         }
-
-        $qty_minus = session("cart.{$product_id}.qty");
-        $sum_minus = $qty_minus * session("cart.{$product_id}.price");
-
-        session(['cart_qty' => session('cart_qty') - $qty_minus]);
+        $qty_minus  = session("cart.{$product_id}.qty");
+        $sum_minus  = $qty_minus * session("cart.{$product_id}.price");
+        session(['cart_qty'   => session('cart_qty') - $qty_minus]);
         session(['cart_total' => session('cart_total') - $sum_minus]);
-
         session()->forget("cart.{$product_id}");
+        if (session('cart_qty') <= 0) {
+            session()->forget('cart');
+            session()->forget('cart_qty');
+            session()->forget('cart_total');
+        }
+
         return true;
     }
 }

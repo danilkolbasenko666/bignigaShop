@@ -22,7 +22,7 @@
                     <td>{{ number_format($item['price'], 0, '.', ' ') }} руб.</td>
                     <td>{{ $item['qty'] }}</td>
                     <td>
-                        <span class="text-danger del-item" data-action="{{ route('cart.del_item', ['product_id' => $item['id']]) }}">
+                        <span class="text-danger del-item" data-action="{{ route('cart.del_item', ['product_id' => $item['product_id']]) }}">
                             <i class="fas fa-times"></i>
                         </span>
                     </td>

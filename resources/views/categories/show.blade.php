@@ -30,9 +30,9 @@
                         </div>
                         <div class="card-price text-center">
                             @if($product->old_price)
-                                <del><small>@price_format($product->old_price) руб.</small></del>
+                                <del><small>{{ number_format($product->old_price, 0, '.', ' ') }} руб.</small></del>
                             @endif
-                            @price_format($product->price) руб.
+                            {{ number_format($product->price, 0, '.', ' ') }} руб.
                         </div>
 
                         <form action="{{ route('cart.add') }}" method="post" class="addtocart">

@@ -21,6 +21,10 @@
                     Корзина <span class="badge badge-light mini-cart-qty">{{ session('cart_qty') ?? 0 }}</span>
                 </button>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('register.create') }}">Регистрация</a>
+            </li>
         </ul>
         <form class="form-inline">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">

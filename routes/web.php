@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -33,3 +35,6 @@ Route::get('/cart/show', [\App\Http\Controllers\CartController::class, 'show'])-
 Route::get('/cart/clear', [\App\Http\Controllers\CartController::class, 'clear'])->name('cart.clear');
 
 Route::match(['get', 'post'], '/cart/checkout', [\App\Http\Controllers\CartController::class, 'checkout'])->name('cart.checkout');
+
+Route::get('/register', [\App\Http\Controllers\UserController::class, 'create'])->name('register.create');
+Route::post('/register', [\App\Http\Controllers\UserController::class, 'store'])->name('register.store');

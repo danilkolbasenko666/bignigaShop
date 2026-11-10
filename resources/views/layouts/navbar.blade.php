@@ -23,8 +23,20 @@
             </li>
 
             <li class="nav-item">
+            @auth
+                <span class="nav-link text-white">Привет, {{ Auth::user()->name }}!</span>
+                
+                @if(Auth::user()->is_admin)
+                    <a class="nav-link text-warning" href="{{ route('admin.index') }}">Админка</a>
+                @endif
+                
+                <a class="nav-link" href="{{ route('logout') }}">Выход</a>
+            @else
+                <a class="nav-link" href="{{ route('login.create') }}">Вход</a>
                 <a class="nav-link" href="{{ route('register.create') }}">Регистрация</a>
-            </li>
+            @endauth
+        </li>
+        
         </ul>
         <form class="form-inline">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">

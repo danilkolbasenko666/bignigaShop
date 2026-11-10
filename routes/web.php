@@ -1,6 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\Admin\MainController as AdminMainController;
 
 
 
@@ -23,18 +28,32 @@ use Illuminate\Support\Facades\Route;
     return view('index');
 });*/
 
-Route::get('/', [\App\Http\Controllers\ProductController::class, 'index'])->name('home');
-//Route::get('/', '\App\Http\Controllers\ProductController@index')->name('home');
+Route::get('/', [ProductController::class, 'index'])->name('home');
+Route::get('/product/{slug}', [ProductController::class, 'show'])->name('products.show');
+Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('categories.show');
 
-Route::get('/product/{slug}', [\App\Http\Controllers\ProductController::class, 'show'])->name('products.show');
-Route::get('/category/{slug}', [\App\Http\Controllers\CategoryController::class, 'show'])->name('categories.show');
+// корзины
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::get('/cart/del-item/{product_id}', [CartController::class, 'delItem'])->name('cart.del_item');
+Route::get('/cart/show', [CartController::class, 'show'])->name('cart.show');
+Route::get('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+Route::match(['get', 'post'], '/cart/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
 
-Route::post('/cart/add', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
-Route::get('/cart/del-item/{product_id}', [\App\Http\Controllers\CartController::class, 'delItem'])->name('cart.del_item');
-Route::get('/cart/show', [\App\Http\Controllers\CartController::class, 'show'])->name('cart.show');
-Route::get('/cart/clear', [\App\Http\Controllers\CartController::class, 'clear'])->name('cart.clear');
+// гости
+Route::middleware('guest')->group(function () {
+    Route::get('/register', [UserController::class, 'create'])->name('register.create');
+    Route::post('/register', [UserController::class, 'store'])->name('register.store');
+    
+    Route::get('/login', [UserController::class, 'loginForm'])->name('login.create');
+    Route::post('/login', [UserController::class, 'login'])->name('login');
+});
 
-Route::match(['get', 'post'], '/cart/checkout', [\App\Http\Controllers\CartController::class, 'checkout'])->name('cart.checkout');
-
-Route::get('/register', [\App\Http\Controllers\UserController::class, 'create'])->name('register.create');
-Route::post('/register', [\App\Http\Controllers\UserController::class, 'store'])->name('register.store');
+// авторизованные
+Route::middleware('auth')->group(function () {
+    Route::get('/logout', [UserController::class, 'logout'])->name('logout');
+    
+    // админ
+    Route::prefix('admin')->middleware('admin')->group(function () {
+        Route::get('/', [AdminMainController::class, 'index'])->name('admin.index');
+    });
+});
